@@ -32,10 +32,35 @@ const formSearch = document.querySelector('.form-search'),
         showCity(inputCitiesFrom, dropdownCitiesFrom)
     });
 
-    dropdownCitiesFrom.addEventListener('click', (event) => {
-        const target = event.target;
-        if(target.tagName.toLowerCase() === 'li') {
-            inputCitiesFrom.value = target.textContent;
-            dropdownCitiesFrom.textContent = '';
-        }
+    inputCitiesTo.addEventListener('input', () => {
+        showCity(inputCitiesTo, dropdownCitiesTo)
     });
+
+    function chooseItem(dropdown, input) {
+        dropdown.addEventListener('click', (event) => {
+            const target = event.target;
+            if(target.tagName.toLowerCase() === 'li') {
+                input.value = target.textContent;
+                dropdown.textContent = '';
+            }
+        });
+    }
+
+    chooseItem(dropdownCitiesFrom, inputCitiesFrom);
+    chooseItem(dropdownCitiesTo, inputCitiesTo);
+
+    // dropdownCitiesFrom.addEventListener('click', (event) => {
+    //     const target = event.target;
+    //     if(target.tagName.toLowerCase() === 'li') {
+    //         inputCitiesFrom.value = target.textContent;
+    //         dropdownCitiesFrom.textContent = '';
+    //     }
+    // });
+
+    // dropdownCitiesTo.addEventListener('click', (event) => {
+    //     const target = event.target;
+    //     if(target.tagName.toLowerCase() === 'li') {
+    //         inputCitiesTo.value = target.textContent;
+    //         dropdownCitiesTo.textContent = '';
+    //     }
+    // });
