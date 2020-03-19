@@ -5,38 +5,56 @@ const formSearch = document.querySelector('.form-search'),
     dropdownCitiesTo = formSearch.querySelector('.dropdown__cities-to'),
     inputDateDepart = formSearch.querySelector('.input__date-depart');
 
-    const city = ['Москва', 'Санкт-Петербург', 'Минск', 'Караганда', 'Челябинск', 'Керчь',
-     'Волгоград', 'Самара', 'Днепр', 'Екатеринбург', 'Одесса', 'Ухань', 'Шымкен',
-    'Нижний Новгород', 'Калининград', 'Вроцлав', 'Ростов-на-Дону', 'Краснодар', 'Сочи', 'Омск'];
+    //Данные
+    //const citiesApi = 'http://api.travelpayouts.com/data/ru/cities.json',
+    const citiesApi = 'dataBase/cities.json',
+        proxy = 'https://cors-anywhere.herokuapp.com/',
+        API_KEY = '5d097f5a665744f279a6f08d9eb4549a',
+        calendar = 'http://min-prices.aviasales.ru/calendar_preload';
 
+        let city = [];
+
+    // const city = ['Москва', 'Санкт-Петербург', 'Минск', 'Караганда', 'Челябинск', 'Керчь',
+    //  'Волгоград', 'Самара', 'Днепр', 'Екатеринбург', 'Одесса', 'Ухань', 'Шымкен',
+    // 'Нижний Новгород', 'Калининград', 'Вроцлав', 'Ростов-на-Дону', 'Краснодар', 'Сочи', 'Омск'];
+    // Функции
+
+    const getData = (url, callback) => {
+        const request = new XMLHttpRequest();
+
+        request.open('GET', url);
+        request.addEventListener('readystatechange', () => {
+            if(request.readyState !== 4) return;
+            if(request.status === 200) {
+                callback(request.response)
+            } else {
+                console.error(request.status)
+            }
+        })
+        request.send();
+    }
+
+    
     const showCity = (input, list) => {
         list.textContent = '';
 
-        if(input.value !== '') {
+        if(input.value.trim() !== '') {
             const filterCity = city.filter(item => {
-                const fixItem = item.toLowerCase();
-                return fixItem.includes(input.value.toLowerCase());
+                const fixItem = item.name.toLowerCase();
+                return fixItem.includes(input.value.trim().toLowerCase());
             });
 
             filterCity.forEach(item => {
                 const li = document.createElement('li');
                 li.classList.add('dropdown__city');
-                li.textContent = item;
+                li.textContent = item.name;
                 list.append(li);
             })
         }
         
     };
 
-    inputCitiesFrom.addEventListener('input', () => {
-        showCity(inputCitiesFrom, dropdownCitiesFrom)
-    });
-
-    inputCitiesTo.addEventListener('input', () => {
-        showCity(inputCitiesTo, dropdownCitiesTo)
-    });
-
-    function chooseItem(dropdown, input) {
+    function selectCity(dropdown, input) {
         dropdown.addEventListener('click', (event) => {
             const target = event.target;
             if(target.tagName.toLowerCase() === 'li') {
@@ -46,21 +64,20 @@ const formSearch = document.querySelector('.form-search'),
         });
     }
 
-    chooseItem(dropdownCitiesFrom, inputCitiesFrom);
-    chooseItem(dropdownCitiesTo, inputCitiesTo);
+    inputCitiesFrom.addEventListener('input', () => {
+        showCity(inputCitiesFrom, dropdownCitiesFrom)
+    });
 
-    // dropdownCitiesFrom.addEventListener('click', (event) => {
-    //     const target = event.target;
-    //     if(target.tagName.toLowerCase() === 'li') {
-    //         inputCitiesFrom.value = target.textContent;
-    //         dropdownCitiesFrom.textContent = '';
-    //     }
-    // });
+    inputCitiesTo.addEventListener('input', () => {
+        showCity(inputCitiesTo, dropdownCitiesTo)
+    });
 
-    // dropdownCitiesTo.addEventListener('click', (event) => {
-    //     const target = event.target;
-    //     if(target.tagName.toLowerCase() === 'li') {
-    //         inputCitiesTo.value = target.textContent;
-    //         dropdownCitiesTo.textContent = '';
-    //     }
-    // });
+    selectCity(dropdownCitiesFrom, inputCitiesFrom);
+    selectCity(dropdownCitiesTo, inputCitiesTo);
+
+    //Вызовы функций
+
+    getData(citiesApi, data => {
+        city = JSON.parse(data).filter(item => item.name);
+    });
+
