@@ -12,6 +12,11 @@ const formSearch = document.querySelector('.form-search'),
         API_KEY = '5d097f5a665744f279a6f08d9eb4549a',
         calendar = 'http://min-prices.aviasales.ru/calendar_preload';
 
+        const FROM = 'SVX' // код Екатеринбугра
+        const TO = 'KGD' // код Калининграда
+        const WHEN = '2020-05-25'; // на 25 мая 2020
+        const CALENDAR_PRELOAD = CALENDAR + `?origin=${FROM}&destination=${TO}&depart_date=${WHEN}&one_way=true` // строка запроса
+
         let city = [];
 
     // const city = ['Москва', 'Санкт-Петербург', 'Минск', 'Караганда', 'Челябинск', 'Керчь',
@@ -79,5 +84,11 @@ const formSearch = document.querySelector('.form-search'),
 
     getData(citiesApi, data => {
         city = JSON.parse(data).filter(item => item.name);
+    });
+
+    // домашнее задание - выводит в консоль информацию о рейсе Екатеринбург - Калининград на 25 мая
+    getData(CALENDAR_PRELOAD, (data) => {
+        console.log(JSON.parse(data));
+        
     });
 
