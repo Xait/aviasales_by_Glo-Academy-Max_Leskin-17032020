@@ -44,10 +44,22 @@ const formSearch = document.querySelector('.form-search'),
         list.textContent = '';
 
         if(input.value.trim() !== '') {
-            const filterCity = city.filter(item => {
+            let filterCity = city.filter(item => {
                 const fixItem = item.name.toLowerCase();
                 return fixItem.includes(input.value.trim().toLowerCase());
             });
+
+            filterCity.sort((a,b) => {
+                if (a.name < b.name)
+                    return -1;
+                if (a.name > b.name)
+                    return 1;
+                return 0;
+            });
+    
+            // filterCity = filterCity.filter(item => {
+            //     return item.name.includes(input.value);
+            // });
 
             filterCity.forEach(item => {
                 const li = document.createElement('li');
@@ -74,7 +86,14 @@ const formSearch = document.querySelector('.form-search'),
     };
 
     const renderCheapYear = (cheapTickets) => {
-        console.log(cheapTickets)
+        //console.log(cheapTickets)
+        cheapTickets.sort((a, b) => {
+            if (a.value < b.value) {
+                return -1
+            } else if (a.value > b.value) {
+                return 1
+            }
+        });
     };
 
 
@@ -117,15 +136,11 @@ const formSearch = document.querySelector('.form-search'),
 
         const requestData = `?depart_date=${formData.when}&origin=${formData.from}&destination=${formData.to}&one_way=true`;
 
-        // const requestData2 = '?depart_date=' + formData.when +
-        //     '&origin=' + formData.from +
-        //     '&destination=' + formData.to +
-        //     '&one_way=true';//API_KEY не нужен
 
             //console.log(requestData)
-            getData(calendar + requestData, (response) => {//можно без proxy
+            getData(calendar + requestData, response => {//можно без proxy
                // console.log(response)
-               renderCheap(response, formData.when);
+               return renderCheap(response, formData.when);
             });
     });
 
